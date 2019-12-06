@@ -1,5 +1,6 @@
 using Printf
 using SparseArrays
+const spiderman = 5306
 
 """
     read_network(pathname)
@@ -47,6 +48,38 @@ function read_network(pathname)
     end
 end
 
+
+"""
+Recieves collaboration matrix and character matrix, calculates c^2 - c^5, then
+loops through the characters to find their spiderman index number. 
+"""
+function CalculateSpiderman(collaborations, characters)
+	collaborationsToThe0 = collaborations^0
+	collaborationsToThe2 = collaborations^2
+	collaborationsToThe3 = collaborations^3
+	collaborationsToThe4 = collaborations^4
+	collaborationsToThe5 = collaborations^5
+	
+	for i = 1:length(characters)
+		if i == spiderman
+			println( "SPI: Spiderman\t",characters[i])
+		elseif collaborations[spiderman,i] > 0
+			println("SPI: 1\t",characters[i])
+		elseif collaborationsToThe2[spiderman,i] > 0
+			println("SPI: 2\t",characters[i])
+		elseif collaborationsToThe3[spiderman,i] > 0
+			println("SPI: 3\t",characters[i])
+		elseif collaborationsToThe4[spiderman,i] > 0 
+			println("SPI: 4\t",characters[i])
+		elseif collaborationsToThe5[spiderman,i] > 0
+			println("SPI: 5\t",characters[i])
+		else
+			println("\tSPI: Unkown",characters[i])
+		end
+	end
+end
+
+
 """
 The main program for the Marvel universe assignment. In this hint version it
 reads the Marvel universe network from the file "porgat.txt" and prints some
@@ -54,20 +87,13 @@ simple statistics to make sure the file was properly read. Then it computes
 the collaboration matrix.
 """
 function main()
-    # Read the network
     println("Reading Marvel universe network")
     characters, comics, appearances = read_network("porgat.txt")
     ncharacters = length(characters)
     ncomics = length(comics)
-    # Print some statistics
-    println("Number of characters = $ncharacters")
-    println("Number of comics = $ncomics")
     nappearances = sum(appearances)
-    @printf("Mean books per character = %0.2f\n", nappearances / ncharacters)
-    @printf("Mean characters per book = %0.2f\n", nappearances / ncomics)
-    # Compute collaboration matrix
     collaborations = appearances * appearances'
-    @show collaborations[1:30, 1:30]
+	CalculateSpiderman(collaborations, characters)
 end
 
 main()
